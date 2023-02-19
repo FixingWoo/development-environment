@@ -4,6 +4,7 @@ const childProcess = require("child_process");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const apiMocker = require("connect-api-mocker");
 
 module.exports = {
   mode: "development",
@@ -54,6 +55,14 @@ module.exports = {
         loader: "babel-loader", // 바벨 로더를 추가한다
       },
     ],
+  },
+  devServer: {
+    overlay: true,
+    stats: "errors-only",
+    before: (app) => {
+      app.use(apiMocker("/api", "mocks/api"));
+    },
+    hot: true,
   },
   plugins: [
     new webpack.BannerPlugin({
